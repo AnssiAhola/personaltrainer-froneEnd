@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { FitnessCenterTwoTone, PeopleAltTwoTone } from '@material-ui/icons';
+import { CalendarTodayOutlined, FitnessCenterTwoTone, PeopleAltTwoTone } from '@material-ui/icons';
 
 import Customers from './components/customer/Customers';
 import Trainings from './components/training/Trainings';
@@ -11,19 +11,26 @@ import {
 } from './components/MiniDrawer';
 import { appBarStyles, appStyles, drawerStyles } from './styles';
 import { useLocation, Redirect, Route, useHistory, Switch } from 'react-router-dom';
+import Calendar from './components/Calendar';
 
 const routes = {
 	customers: {
 		title: 'Customers',
 		path: '/customers',
 		icon: <PeopleAltTwoTone />,
-		component: <Customers />
+		component: Customers
 	},
 	trainings: {
 		title: 'Trainings',
 		path: '/trainings',
 		icon: <FitnessCenterTwoTone />,
-		component: <Trainings />
+		component: Trainings
+	},
+	calendar: {
+		title: 'Calendar',
+		path: '/calendar',
+		icon: <CalendarTodayOutlined />,
+		component: Calendar
 	}
 };
 
@@ -71,9 +78,10 @@ function App() {
 			</MiniDrawer>
 			<div className={appClasses.content}>
 				<Switch>
-					<Redirect exact from="/" to="/customers" />
-					<Route exact path="/customers" component={Customers} />
-					<Route exact path="/trainings" component={Trainings} />
+					<Redirect exact from="/" to={routes.customers.path} />
+					{Object.values(routes).map((route, i) => (
+						<Route key={i} exact path={route.path} component={route.component} />
+					))}
 				</Switch>
 			</div>
 		</div>
