@@ -12,9 +12,10 @@ export const CustomersService = {
 
 const TrainingsURL = `${BASE_URL}trainings/`;
 export const TrainingsService = {
-	GetAll: () => _fetch(TrainingsURL, 'GET'),
+	GetAll: () => _fetch('https://customerrest.herokuapp.com/gettrainings', 'GET'),
 	Add: (data) => _fetch(TrainingsURL, 'POST', data),
-	Delete: (training) => _fetch(training.links[0].href, 'DELETE')
+	Delete: (training) => _fetch(TrainingsURL + training.id, 'DELETE'),
+	Update: (training) => _fetch(TrainingsURL + training.id, 'PUT', training)
 };
 
 const headers = { 'Content-type': 'application/json' };
@@ -22,7 +23,7 @@ const _fetch = async (url, method, data = undefined) => {
 	const options = {
 		method: method,
 		headers,
-		body: data
+		body: JSON.stringify(data)
 	};
 	console.log(url);
 	return await fetch(url, options)
