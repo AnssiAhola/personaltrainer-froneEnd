@@ -8,26 +8,20 @@ import { CustomersService } from './../../Services';
 export default function AddCustomer({ fields, onComplete }) {
 	const [ customer, setCustomer ] = useState(new Customer());
 	const [ errors, setErrors ] = useState({});
-	const [ open, setOpen ] = useState(false);
-
-	const toggleOpen = () => setOpen((prevState) => !prevState);
 
 	const handleInputChange = (e) => setCustomer({ ...customer, [e.target.name]: e.target.value });
 
-	const handleCancelEvent = () => {
-		setErrors({});
-		toggleOpen();
-	};
+	const handleCancelEvent = () => setErrors({});
 
 	const addCustomer = (customer) => CustomersService.Add(customer).then(() => onComplete());
 
-	const handleAddEvent = () => {
-		CustomerValidator.validate(customer, { abortEarly: false })
+	const handleAddEvent = async () => {
+		return await CustomerValidator.validate(customer, { abortEarly: false })
 			.then((validCustomer) => {
 				addCustomer(validCustomer);
 				setErrors({});
-				toggleOpen();
 				setCustomer(new Customer());
+				return true;
 			})
 			.catch((e) => {
 				const current = {};
@@ -35,17 +29,12 @@ export default function AddCustomer({ fields, onComplete }) {
 					current[error.path] = error.message;
 				});
 				setErrors(current);
+				return false;
 			});
 	};
 
 	return (
-		<AddDialog
-			toggleOpen={toggleOpen}
-			open={open}
-			title="Add Customer"
-			onConfirm={handleAddEvent}
-			onCancel={handleCancelEvent}
-		>
+		<AddDialog title="Add Customer" onConfirm={handleAddEvent} onCancel={handleCancelEvent}>
 			{fields.map((field, i) => {
 				return (
 					<TextField

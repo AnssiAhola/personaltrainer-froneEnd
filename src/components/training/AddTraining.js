@@ -19,9 +19,6 @@ export default function AddTraining({ onComplete }) {
 	const [ customers, setCustomers ] = useState([]);
 	const [ customerIndex, setCustomerIndex ] = useState(-1);
 	const [ errors, setErrors ] = useState({});
-	const [ open, setOpen ] = useState(false);
-
-	const toggleOpen = () => setOpen((prevState) => !prevState);
 
 	const handleInputChange = (e) => setTraining({ ...training, [e.target.name]: e.target.value });
 
@@ -40,20 +37,17 @@ export default function AddTraining({ onComplete }) {
 	};
 
 	const handleOpenEvent = () => {
-		toggleOpen();
 		if (customers.length < 1) getCustomers();
 	};
 
-	const handleCancelEvent = () => toggleOpen();
-
 	const handleAddEvent = async () => {
-		TrainingValidator.validate(training, { abortEarly: false })
+		return await TrainingValidator.validate(training, { abortEarly: false })
 			.then(() => {
 				addTraining(training);
-				toggleOpen();
 				setTraining(new Training());
 				setCustomerIndex(-1);
 				setErrors({});
+				return true;
 			})
 			.catch((e) => {
 				const currentErrors = {};
@@ -61,6 +55,7 @@ export default function AddTraining({ onComplete }) {
 					currentErrors[error.path] = error.message;
 				});
 				setErrors(currentErrors);
+				return false;
 			});
 	};
 
@@ -120,13 +115,7 @@ export default function AddTraining({ onComplete }) {
 	];
 
 	return (
-		<AddDialog
-			toggleOpen={handleOpenEvent}
-			open={open}
-			title="Add Training"
-			onConfirm={handleAddEvent}
-			onCancel={handleCancelEvent}
-		>
+		<AddDialog title="Add Training" onOpen={handleOpenEvent} onConfirm={handleAddEvent}>
 			{Fields.map((field, i) => <Fragment key={i}>{field}</Fragment>)}
 		</AddDialog>
 	);
