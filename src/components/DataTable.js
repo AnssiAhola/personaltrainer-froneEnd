@@ -1,15 +1,16 @@
 import { useRef, useState } from 'react';
 import { AgGridReact } from 'ag-grid-react';
-
 import { Card, InputAdornment, TextField, Grid } from '@material-ui/core';
-
 import SearchIcon from '@material-ui/icons/Search';
-
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-material.css';
 import { dataTableStyles } from '../styles';
 
-function DataTable({ data }) {
+export function TableHeaderContent({ children }) {
+	return <Grid item> {children}</Grid>;
+}
+
+export default function DataTable({ data, children }) {
 	const [ quickFilter, setQuickFilter ] = useState('');
 	const ref = useRef();
 
@@ -43,6 +44,7 @@ function DataTable({ data }) {
 						}}
 					/>
 				</Grid>
+				{children}
 			</Grid>
 			<AgGridReact
 				domLayout="autoHeight"
@@ -56,4 +58,3 @@ function DataTable({ data }) {
 		</Card>
 	);
 }
-export default DataTable;
