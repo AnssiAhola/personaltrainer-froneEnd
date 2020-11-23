@@ -18,12 +18,10 @@ export const MiniDrawerContent = ({ children }) => {
 	return <List>{children}</List>;
 };
 
-export const MiniDrawerButton = ({text,icon,onClick,selected}) => {
+export const MiniDrawerButton = ({ text, onClick, icon, selected }) => {
 	return (
-		<ListItem button onClick={onClick} selected={selected} >
-			<ListItemIcon>
-				{icon}
-			</ListItemIcon>
+		<ListItem button onClick={onClick} selected={selected}>
+			<ListItemIcon>{icon}</ListItemIcon>
 			<ListItemText primary={text} />
 		</ListItem>
 	);
@@ -75,7 +73,7 @@ export const MiniDrawer = ({ classes, open, onToggle, children }) => {
 			}}
 		>
 			<div className={classes.toolbar}>
-				<IconButton onClick={onToggle}>
+				<IconButton color="inherit" onClick={onToggle}>
 					{theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
 				</IconButton>
 			</div>
